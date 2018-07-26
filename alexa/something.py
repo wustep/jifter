@@ -1,31 +1,32 @@
 from flask import Flask
 from flask import render_template
-from flask_ask import Ask, statement, qeustion
+from flask_ask import Ask, statement, qeustion, session
 
 app = Flask(__name__)
 ask = Ask(app, '/')
 
+
 @ask.launch
 def start_jifter_intent():
     welcome_msg = render_template(app_open)
-    #start store for user
+    #TODO: start store for user
     return question(welcome_msg)
 
 
 @ask.intent('AMAZON.NoIntent')
 def pos_response():
-    next_question = "Yes, Next question for user {}".format(user_id)
+    response = get_api_response("no")
     return question(next_question)
 
 @ask.intent('AMAZON.YesIntent')
 def neg_response():
-
-    next_question = "No, Next question for user {}".format(user_id)
+    response = get_api_response("yes")
+    #logic about
     return question(next_question)
 
 @ask.intent('MaybeIntent')
 def maybe_response():
-    next_question = "Maybe, next question for user {}".format(user_id)
+    response = get_api_response("maybe")
 
 @ask.intent('GetGiftsIntent')
 def get_gift_list():
@@ -46,14 +47,21 @@ def finished_jifter():
     speech_text = render_template(close_app)
     return statement(speech_text)
 
+@do_teardown_appcontext
+def clear_user():
+    #destroy user
 
-def get_api_response(userAnswer):
+def get_api_response(userResponse):
 
-    send_json = {response: userAnswer}
+    parameters = {"response": userResponse, "user_id": session.user.userId}
+    response = requests.get(API_ENDPOINT, params=parameters)
 
-    res_json = {}
+    if response.status_code == 200:
+        res_json = response.content
+    else:
+        res_json =  None
+
     return res_json
-
 
 
 if __name__ == '__main__':

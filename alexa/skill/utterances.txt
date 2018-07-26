@@ -1,5 +1,11 @@
-GetGiftsIntent gifts
-GetGiftsIntent
 
+SendTextIntent through text
+SendTextIntent on text
+SendTextIntent text message
+SendTextIntent text me
+SendTextIntent on text
 
-ContinueIntent
+SendEmailIntent through email
+SendEmailIntent email me
+SendEmailIntent on email
+SendEmailIntent email
