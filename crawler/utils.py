@@ -1,11 +1,25 @@
 import re
 import requests
-from constants import CACHE_PATH
+from constants import CACHE_PATH, TAG_EXCLUSIONS
+
+
+def get_tags(text):
+    word_map = {}
+    for word in text.split(" "):
+        word = word.lower().strip(" .!?,\"'()[]\{\}")
+        count = word_map.get(word, 0)
+        count += 1
+        word_map[word] = count
+    tags = list(word_map.items())
+    tags = sorted(tags, key=lambda x: x[1], reverse=True)
+    tags = [tag for tag, _ in tags if tag not in TAG_EXCLUSIONS][:4]
+    return tags
 
 
 def clean_whitespace(text):
     text = text.replace(r"\n", " ")
-    text = re.sub(r"\s{2,}", "", text)
+    text = text.replace("\\", "")
+    text = re.sub(r"\s{2,}", " ", text)
     text = text.strip(" ")
     return text
 

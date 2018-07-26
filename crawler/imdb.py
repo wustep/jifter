@@ -27,6 +27,8 @@ def retrieve():
             description = soup.select_one(".plot_summary .summary_text")
             description = clean_whitespace(description.get_text())
             image = soup.select_one(".poster a img")["src"]
+            if not image.startswith("http"):
+                image = "{}{}".format(BASE_URL, image)
             link = soup.select_one(".winner-option.watch-option")["data-href"]
             genres = soup.select(".title_wrapper .subtext a[href^=\"/genre\"]")
             genres = [clean_whitespace(genre.get_text()) for genre in genres]

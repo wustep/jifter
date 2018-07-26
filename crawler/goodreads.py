@@ -32,6 +32,8 @@ def retrieve():
             genres = soup.select(".left .bookPageGenreLink")
             genres = [clean_whitespace(genre.get_text()) for genre in genres]
             image = soup.find("img", {"id": "coverImage"})["src"]
+            if not image.startswith("http"):
+                image = "{}{}".format(BASE_URL, image)
             product = Product(title,
                               "{}{}".format(BASE_URL, link),
                               image,
