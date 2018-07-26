@@ -1,4 +1,7 @@
 from flask import Flask, jsonify, request
+from dotenv import load_dotenv
+from pathlib import Path
+import os
 
 app = Flask(__name__)
 
@@ -38,4 +41,7 @@ def end():
     return jsonify({})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    dotenv_path = Path(os.path.abspath(__file__)) / '../..' / '.env'
+    load_dotenv(dotenv_path=dotenv_path)
+    port = os.getenv("API_PORT")
+    app.run(debug=True, port=port)
