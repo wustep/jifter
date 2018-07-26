@@ -10,15 +10,20 @@ class Product(object):
                  image,
                  primary_tag,
                  secondary_tags,
-                 description):
+                 description,
+                 price=None):
         super(Product, self).__init__()
-        secondary_tags = {clean_whitespace(tag) for tag in secondary_tags}
+        unique_tags = set()
+        for tag in secondary_tags:
+            tag = clean_whitespace(tag).lower()
+            unique_tags.add(tag)
         self.name = name
         self.link = link
         self.image = image
         self.primary_tag = primary_tag
-        self.secondary_tags = list(secondary_tags)
+        self.secondary_tags = list(unique_tags)
         self.description = description
+        self.price = price
 
     def dump(self):
         fname = link_to_fname(self.name)
