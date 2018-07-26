@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from pathlib import Path
 import os
 
+import store
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -33,6 +35,13 @@ def undo():
     '''
     return jsonify({})
 
+@app.route('/send')
+def send():
+    '''
+    Sends the user's list of recommendations to their text or email.
+    '''
+    return jsonify({})
+
 @app.route('/end')
 def end():
     '''
@@ -44,4 +53,4 @@ if __name__ == '__main__':
     dotenv_path = Path(os.path.abspath(__file__)) / '../..' / '.env'
     load_dotenv(dotenv_path=dotenv_path)
     port = os.getenv("API_PORT")
-    app.run(debug=True, port=port)
+    app.run(debug=True, port=int(port))
