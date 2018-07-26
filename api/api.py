@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -13,20 +13,40 @@ app = Flask(__name__)
 def index():
     return "Hello, World!"
 
-@app.route('/start')
+@app.route('/start', methods=["POST"])
 def start():
     '''
     Starts a user's session and returns a question.
     '''
     data = request.get_json()
-    session = data.get(session, 0)
+    session = data.get("session", 0)
     if session:
         result = store.create_user(session)
-        return jsonify({question: questions.get_question()})
+        return jsonify({"question": get_question()})
     else:
         abort(412)
 
-@app.route('/answer')
+@app.route('/price', methods=["POST"])
+def price():
+    '''
+    Sets a user's price range.
+    '''
+    data = request.get_json()
+    session = data.get("session", 0)
+    price = data.get("price", {})
+    if session:
+        price_set = {}
+        if price and "min" in price:
+            price_set["min"] = int(price["min"])
+        if price and "max" in price:
+            price_set["max"] = int(price["max"])
+        if store.set_price(session, price_set):
+            result = {"success": True}
+            result["price"] = price
+            return jsonify(result)
+    abort(412)
+
+@app.route('/answer', methods=["POST"])
 def answer():
     '''
     Answers a user's question and returns a new question, their
@@ -35,7 +55,7 @@ def answer():
     '''
     return jsonify({})
 
-@app.route('/undo')
+@app.route('/undo', methods=["POST"])
 def undo():
     '''
     Undos the user's response to the last question, returning
@@ -43,14 +63,14 @@ def undo():
     '''
     return jsonify({})
 
-@app.route('/send')
+@app.route('/send', methods=["POST"])
 def send():
     '''
     Sends the user's list of recommendations to their text or email.
     '''
     return jsonify({})
 
-@app.route('/end')
+@app.route('/end', methods=["POST"])
 def end():
     '''
     Ends & deletes the user's session.
