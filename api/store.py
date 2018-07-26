@@ -22,7 +22,7 @@ users = {
         products: [
             TODO
         ],
-        question_count: (number_of_questions_asked)
+        num_questions: (number_of_questions_asked)
       }
     },
     ...
@@ -35,20 +35,22 @@ DEFAULT_TAG_WEIGHT = 0.1
 
 def create_user(session):
     '''
-    Creates a user session in the store with a new question.
-    Returns true if an existing session was deleted, or false if not.
+    Creates a user session in the store with a new question,
+    deleting existing session if matched.
+    Returns true if successful, false otherwise.
     '''
-    result = 0
     if session in users:
         users.pop(session)
-        result = 1
     users[session] = {}
     users[session]["tags"] = {}
     users[session]["questions"] = []
     users[session]["products"] = []
-    users[session]["questions_count"] = 1
-    add_question(session)
-    return result
+    users[session]["num_questions"] = 0
+    print(users[session])
+    if (not add_question(session, questions.get_question())):
+        users.pop(session)
+        return 0
+    return 1
 
 def delete_user(session):
     '''
@@ -56,36 +58,17 @@ def delete_user(session):
     '''
     users.pop(session, None)
 
-def set_tag(session, tag, value):
-    '''
-    Sets a tag for a user session in the store.
-    Returns 0 if user does not exist, otherwise 1.
-    '''
-    if session in users:
-        users[session]["tags"] = (tag, value)
-        return 1
-    else:
-        return 0
-
-def get_tags(session):
-    '''
-    Gets all tags for a given user session.
-    Returns 0 if user does not exist.
-    '''
-    if session in users:
-        return users[session]["tags"]
-    return 0
-
 def add_question(session, question):
     '''
     Adds unanswered question tuple to user session's store.
     Returns 0 if user does not exist or adding question failed.
     Otherwise, returns 1.
     '''
-    if session in users and "question" in users[session]:
+    print(users)
+    if session in users and "questions" in users[session]:
         question_to_add = (question["id"], question["question"], 0)
-        users[session]["question"].push(question_to_add)
-        users[session]["questions_count"] += 1
+        users[session]["questions"].append(question_to_add)
+        users[session]["num_questions"] += 1
         return 1
     return 0
 
@@ -98,11 +81,12 @@ def answer_question(session, response):
     '''
     if session in users and (response == "Y" or response == "M" or response == "N"):
         if len(users[session]["questions"]) > 0:
-            users[session]["questions"][-1][2] = response
-            tag_weights = get_question_weights(question_id)
+            question = users[session]["questions"][-1]
+            users[session]["questions"][-1] = (question[0], question[1], response)
+            tag_weights = questions.get_question_weights(question[0], response)
             update_tags(session, tag_weights)
             update_products(session)
-            add_question(session, question)
+            add_question(session, questions.get_question())
             return 1
     return 0
 
@@ -112,7 +96,7 @@ def get_latest_question(session):
     no questions, no questions left, or invalid session.
     '''
     if session in users:
-        if len(users[session]["questions"] > 0):
+        if len(users[session]["questions"]) > 0:
             latest_question = users[session]["questions"][-1]
             if (latest_question[2] == 0):
                 return latest_question[1]
@@ -163,4 +147,13 @@ def get_products(session):
     '''
     if session in users:
         return users[session]["products"]
+    return 0
+
+def get_num_questions(session):
+    '''
+    Gets the number of questions asked to a user (includes the unanswered question),
+    returns 0 if user not found.
+    '''
+    if session in users:
+        return users[session]["num_questions"]
     return 0
