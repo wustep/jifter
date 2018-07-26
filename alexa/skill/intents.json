@@ -1,0 +1,16 @@
+{
+  "intents": [
+    {
+      "intent": "SendTextIntent"
+    },
+    {
+      "intent": "SendEmailIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    }
+  ]
+}
