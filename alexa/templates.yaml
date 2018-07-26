@@ -1,0 +1,18 @@
+app_open: "Let's find the perfect gift!"
+close_app: "Hope you love your gift!"
+
+continue_question:
+
+gifts_during: "I think you should get {{top_score_gift}}, would you like to keep going
+or should I send you the list?"
+
+gifts_during_end: "Ok, i'll send you the other reccomendations"
+
+high_score_gift: "{{top_score_gift}} would be the perfect gift!"
+med_score_gift: "I think {{top_score_gift}} would a good gift"
+low_score_gift: "I'm not very sure, but {{top_score_gift}} might work"
+
+
+
+gifts_end: "You should get {{top_gift_name}}, but i'll send you some
+ other reccomendations as well."
