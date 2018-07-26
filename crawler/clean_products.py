@@ -9,5 +9,7 @@ if __name__ == "__main__":
         print("Cleaning {}".format(fpath))
         with open(fpath) as f:
             data = json.load(f)
-        product = Product(*list(data.values()))
+        price = data["price"]
+        del data["price"]
+        product = Product(*list(data.values()), price=price)
         product.dump()

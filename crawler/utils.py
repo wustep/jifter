@@ -6,7 +6,7 @@ from constants import CACHE_PATH, TAG_EXCLUSIONS
 def get_tags(text):
     word_map = {}
     for word in text.split(" "):
-        word = word.lower().strip(" .!?,\"'()[]\{\}")
+        word = word.lower().strip(" .!?,\"'()[]\{\}:;")
         count = word_map.get(word, 0)
         count += 1
         word_map[word] = count
