@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 import store
-from questions import get_question
+from questions import get_question, get_last_question
 from gifts import get_recommendations
 
 app = Flask(__name__)
@@ -22,7 +22,9 @@ def start():
     session = data.get("session", 0)
     if session:
         result = store.create_user(session)
-        return jsonify({"question": get_question()})
+        question = get_question()
+        store.add_question(question)
+        return jsonify({"question": question, "products": []})
     else:
         abort(412)
 
@@ -53,15 +55,15 @@ def answer():
     current list of recommendations (capped at 10), and whether
     there are more questions left.
     '''
-    return jsonify({})
-
-@app.route('/undo', methods=["POST"])
-def undo():
-    '''
-    Undos the user's response to the last question, returning
-    the question again with their current list of recommendations.
-    '''
-    return jsonify({})
+    data = request.get_json()
+    session = data.get("session", 0)
+    response = data.get("response", 0)
+    if session and response:
+        if answer_question(session, response):
+            question = get_question(session)
+            store.add_question(session, question)
+            return jsonify({"question": question, "products": []})
+    return jsonify(question)
 
 @app.route('/send', methods=["POST"])
 def send():
@@ -73,9 +75,15 @@ def send():
 @app.route('/end', methods=["POST"])
 def end():
     '''
-    Ends & deletes the user's session.
+    Deletes a user session if it exists.
+    Reports success regardless of whether user exists, as long as it is provided.
     '''
-    return jsonify({})
+    data = request.get_json()
+    session = data.get("session", 0)
+    if session:
+        delete_user(session)
+        return jsonify({"success": True})
+    abort(412)
 
 if __name__ == '__main__':
     dotenv_path = Path(os.path.abspath(__file__)) / '../..' / '.env'
