@@ -1,9 +1,11 @@
+import os
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 from pathlib import Path
-import os
 
 import store
+from questions import get_question
+from gifts import get_recommendations
 
 app = Flask(__name__)
 
@@ -16,7 +18,13 @@ def start():
     '''
     Starts a user's session and returns a question.
     '''
-    return jsonify({})
+    data = request.get_json()
+    session = data.get(session, 0)
+    if session:
+        result = store.create_user(session)
+        return jsonify({question: questions.get_question()})
+    else:
+        abort(412)
 
 @app.route('/answer')
 def answer():

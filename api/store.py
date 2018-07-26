@@ -3,8 +3,14 @@ users = {}
 def create_user(session):
     '''
     Creates a user session in the store.
+    Returns true if an existing session was deleted, or false if not.
     '''
+    result = 0
+    if session in users:
+        users.pop(session)
+        result = 1
     users[session] = {}
+    return result
 
 def delete_user(session):
     '''
