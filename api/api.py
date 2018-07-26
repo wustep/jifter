@@ -4,8 +4,6 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 import store
-from questions import get_question, get_last_question
-from gifts import get_recommendations
 
 app = Flask(__name__)
 
@@ -16,15 +14,14 @@ def index():
 @app.route('/start', methods=["POST"])
 def start():
     '''
-    Starts a user's session and returns a question.
+    Starts a user's session and returns a question and product recommendations.
     '''
     data = request.get_json()
     session = data.get("session", 0)
     if session:
         result = store.create_user(session)
-        question = get_question()
-        store.add_question(question)
-        return jsonify({"question": question, "products": []})
+        return jsonify({"question": store.get_latest_question(session),
+                        "products": store.get_products(session)})
     else:
         abort(412)
 
@@ -60,10 +57,11 @@ def answer():
     response = data.get("response", 0)
     if session and response:
         if answer_question(session, response):
-            question = get_question(session)
-            store.add_question(session, question)
-            return jsonify({"question": question, "products": []})
-    return jsonify(question)
+            return jsonify({"question": store.get_latest_question(session),
+                            "products": store.get_products(session),
+                            "num_questions": store.get_num_questions(session)})
+        abort(400)
+    abort(412)
 
 @app.route('/send', methods=["POST"])
 def send():
