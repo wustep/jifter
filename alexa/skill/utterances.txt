@@ -1,11 +1,37 @@
+PriceRangeIntent  {min_price} to {max_price} {currency}
+PriceRangeIntent  under {max_price} {currency}
+PriceRangeIntent  between {min_price} {currency}  and {max_price} {currency}
+PriceRangeIntent  between {min_price} and {max_price}
+PriceRangeIntent  between {min_price}  and {max_price} {currency}
+PriceRangeIntent  under {max_price}
+PriceRangeIntent  {min_price}  to {max_price}
 
-SendTextIntent through text
+PriceAroundIntent approximatly {price} {currency}
+PriceAroundIntent around {price} {currency}
+PriceAroundIntent about {price} {currency}
+
+SendTextIntent in a text
 SendTextIntent on text
 SendTextIntent text message
 SendTextIntent text me
-SendTextIntent on text
+SendTextIntent on my phone
+SendTextIntent in text
+SendTextIntent through text
 
+SendEmailIntent in an email
 SendEmailIntent through email
-SendEmailIntent email me
-SendEmailIntent on email
-SendEmailIntent email
+
+YesIntent ye
+YesIntent yup
+YesIntent yes
+
+NoIntent I don't think so
+NoIntent nope
+NoIntent nein
+NoIntent No
+
+MaybeIntent not sure
+MaybeIntent I'm not sure
+MaybeIntent possibly
+MaybeIntent maybe
+MaybeIntent I don't know
