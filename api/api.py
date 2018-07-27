@@ -27,6 +27,24 @@ def start():
     else:
         abort(412)
 
+@app.route('/current', methods=["POST"])
+def current():
+    '''
+    Given a session, get the current question and product recommendations.
+    '''
+    data = request.get_json()
+    session = data.get("session", 0)
+    if session:
+        question = store.get_latest_question(session)
+        if question:
+            return jsonify({"question": question,
+                            "products": store.get_products(session),
+                            "num_questions": store.get_num_questions(session)})
+        else:
+            abort(500)
+    else:
+        abort(412)
+
 @app.route('/price', methods=["POST"])
 def price():
     '''
