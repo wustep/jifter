@@ -1,15 +1,18 @@
 from flask import Flask, render_template, logging
 from flask_ask import Ask, statement, question, session
 
+import apiEndpoints
+
 app = Flask(__name__)
 ask = Ask(app, '/ask')
-logging.getLogger('flask_ask').setLevel(logging.DEBUG)
+#logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
 @ask.launch
 def start_jifter_intent():
-    print("launched")
-    #welcome_msg = render_template(app_open)
-    return question("Test")
+
+    data = {}
+    welcome_msg = render_template('app_open')
+    return question(welcome_msg)
 
 @ask.intent('AMAZON.FallbackIntent')
 def fallback():
@@ -17,28 +20,41 @@ def fallback():
 
 @ask.intent('PriceRangeIntent')
 def price_range(min_price, max_price, currency):
-    #speech_text = render_template(close_app)
-    return question(str(max_price))
+
+    speech_text = ""
+    if min_price:
+        price_speech_text = render_template('price_range', min_price = min_price, max_price = max_price)
+    else:
+        price_speech_text = render_template('price_below', max_price = max_price)
+    #send_price(min_price, max_price)
+    question_speech_text = "Question goes here"
+    return question(price_speech_text +"Lets get started!" + question_speech_text)
 
 @ask.intent('PriceAroundIntent')
 def price_range(price, currency):
-    #speech_text = render_template(close_app)
-    return question(str(price))
+    speech_text = render_template('price_around', price = price)
+    max_price = int(round(int(price) + (float(price) * .1)))
+    min_price = int(round(int(price) - (float(price) * .1)))
+    #send_price(min_price, max_price)
+
+    price_speech_text = render_template('price_around', price = price)
+    #TODO get current question, and ask
+    question_speech_text = "Question goes here"
+    return question(price_speech_text +"Lets get started!" + question_speech_text)
 
 @ask.intent('YesIntent')
 def pos_response():
-    #response = get_api_response("no")
+    response = get_api_response("N")
     return question("Yes works")
 
 @ask.intent('NoIntent')
 def neg_response():
-    #response = get_api_response("yes")
-    #logic about
+    response = get_api_response("Y")
     return question("No works")
 
 @ask.intent('MaybeIntent')
 def maybe_response():
-    #response = get_api_response("maybe")
+    response = get_api_response("M")
     return question("Maybe works")
 
 @ask.intent('GetGiftsIntent')
@@ -64,10 +80,17 @@ def finished_jifter():
 def clear_user():
     return None
 
+def send_price(min_price, max_price):
+
+    data = {"min": min_price, "max": max_price}
+    response = request.post(API_ENDPOINT, data = data)
+    if response.stat.code != 200:
+        print("Yikes")
+
 def get_api_response(userResponse):
 
-    parameters = {"response": userResponse, "user_id": session.user.userId}
-    response = requests.get(API_ENDPOINT, params=parameters)
+    data = {"response": userResponse, "session": session.user.userId}
+    response = request.post(API_ENDPOINT, data = data)
 
     if response.status_code == 200:
         res_json = response.content

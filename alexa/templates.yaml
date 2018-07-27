@@ -1,7 +1,11 @@
-app_open: "Let's find the perfect gift!"
+app_open: "Let's find the perfect gift! First, how much money do you want to spend?"
 close_app: "Hope you love your gift!"
 
-continue_question:
+price_range: "Ok I'll find a gift, between {{min_price}} and {{max_price}} dollars"
+price_below: "Ok I'll find a gift, under {{max_price}} dollars"
+price_around: "Ok I'll find a gift, around {{price}} dollars"
+
+
 
 gifts_during: "I think you should get {{top_score_gift}}, would you like to keep going
 or should I send you the list?"
