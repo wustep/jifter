@@ -6,9 +6,11 @@ PriceRangeIntent  between {min_price}  and {max_price} {currency}
 PriceRangeIntent  under {max_price}
 PriceRangeIntent  {min_price}  to {max_price}
 
-PriceAroundIntent approximatly {price} {currency}
+PriceAroundIntent approximately {price} {currency}
 PriceAroundIntent around {price} {currency}
 PriceAroundIntent about {price} {currency}
+PriceAroundIntent {price} {currency}
+PriceAroundIntent {price}
 
 SendTextIntent in a text
 SendTextIntent on text

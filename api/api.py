@@ -19,16 +19,36 @@ def start():
     data = request.get_json()
     session = data.get("session", 0)
     if session:
-        result = store.create_user(session)
-        return jsonify({"question": store.get_latest_question(session),
-                        "products": store.get_products(session)})
+        if store.create_user(session):
+            return jsonify({"question": store.get_latest_question(session),
+                            "products": store.get_products(session)})
+        else:
+            abort(500)
+    else:
+        abort(412)
+
+@app.route('/current', methods=["POST"])
+def current():
+    '''
+    Given a session, get the current question and product recommendations.
+    '''
+    data = request.get_json()
+    session = data.get("session", 0)
+    if session:
+        question = store.get_latest_question(session)
+        if question:
+            return jsonify({"question": question,
+                            "products": store.get_products(session),
+                            "num_questions": store.get_num_questions(session)})
+        else:
+            abort(500)
     else:
         abort(412)
 
 @app.route('/price', methods=["POST"])
 def price():
     '''
-    Sets a user's price range.
+    Sets a user's price range, given a price object with a min and max.
     '''
     data = request.get_json()
     session = data.get("session", 0)
@@ -56,7 +76,7 @@ def answer():
     session = data.get("session", 0)
     response = data.get("response", 0)
     if session and response:
-        if answer_question(session, response):
+        if store.answer_question(session, response):
             return jsonify({"question": store.get_latest_question(session),
                             "products": store.get_products(session),
                             "num_questions": store.get_num_questions(session)})
