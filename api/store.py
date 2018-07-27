@@ -46,7 +46,6 @@ def create_user(session):
     users[session]["questions"] = []
     users[session]["products"] = []
     users[session]["num_questions"] = 0
-    print(users[session])
     if (not add_question(session, questions.get_question())):
         users.pop(session)
         return 0
@@ -86,7 +85,7 @@ def answer_question(session, response):
             tag_weights = questions.get_question_weights(question[0], response)
             update_tags(session, tag_weights)
             update_products(session)
-            add_question(session, questions.get_question())
+            add_question(session, questions.get_question(users[session]))
             return 1
     return 0
 
