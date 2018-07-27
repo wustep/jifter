@@ -11,5 +11,5 @@ if __name__ == "__main__":
             data = json.load(f)
         price = data["price"]
         del data["price"]
-        product = Product(*list(data.values()), price=price)
+        product = Product(*list(data.values()), price=price or 10)
         product.dump()
