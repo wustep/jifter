@@ -19,8 +19,12 @@ users = {
             (tagId): value,
             ...
         },
-        products: [
+        secondary_tags: {
             TODO
+        }
+        products: [
+            {name, link, image, primary_tag, secondary_tags, description, price},
+            ...
         ],
         num_questions: (number_of_questions_asked)
       }
@@ -31,7 +35,7 @@ users = {
 
 PRICE_MIN_DEFAULT = os.getenv("PRICE_MIN_DEFAULT")
 PRICE_MAX_DEFAULT = os.getenv("PRICE_MAX_DEFAULT")
-DEFAULT_TAG_WEIGHT = 0.1
+DEFAULT_TAG_WEIGHT = 1.0
 
 def create_user(session):
     '''

@@ -1,4 +1,4 @@
-NUM_TOTAL_QUESTIONS = 10
+NUM_TOTAL_QUESTIONS = 8
 
 def get_question(store=0):
     '''
@@ -7,7 +7,7 @@ def get_question(store=0):
     Returns object with question String and Id.
     Returns false if no questions left.
     '''
-    mongo_query = {"text": "Hello?", "id": 12345}
+    question = {"text": "Hello?", "id": 12345}
     question_id = mongo_query["id"]
     if (store):
         if store["num_questions"] >= NUM_TOTAL_QUESTIONS:
@@ -24,7 +24,15 @@ def get_question_weights(question_id, response):
     Given a question id and its response ("Y", "N", "M"),
     return a dict of tag ids and their multiplier.
     '''
-    return {}
+    # TODO: Get all weights and not just primary tag weight
+    if response == "Y":
+        question = {"primary_tag": "sports", "primary_tag_weight": 1.0}
+        return {question["primary_tag"], question["primary_tag_weight"]}
+    elif response == "N":
+        question = {"primary_tag": "sports", "primary_tag_weight": 1.0}
+        return {question["primary_tag"], 0}
+    else:
+        return {}
 
 def has_question_been_asked(store, question_id):
     '''
