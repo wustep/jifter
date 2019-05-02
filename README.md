@@ -1,7 +1,7 @@
 # jifter
 🎁 Gift suggestion Alexa skill for Amazon Intern Global Hackathon 2018. Took 3rd place!
 
-Note: This repo is missing its final commit, so it's not in a working state at the moment :'(
+Note: This repo is missing its final commit and some other details (like the questions), so it's not in a working state at the moment :'(
 
 ## Features
 Jifter is a Gift Suggestion Alexa skill. After asking you 8 yes/no/maybe questions and a price range, the app narrows down some potential gift ideas.
