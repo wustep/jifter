@@ -4,9 +4,8 @@
 Note: This repo is missing its final commit and some other details (like the questions), so it's not in a working state at the moment :'(
 
 **Submission summary:**
-```
-Jifter (pronounced with a J) is an Alexa app to help you find the perfect gift. By asking you a few quick questions to narrow down your options, Jifter will look through its database of (currently) 500 products--books, movies, and various gifts--and find the top gifts for you.
-```
+Jifter (pronounced with a J) is an Alexa app to help you find the perfect gift. 
+By asking you a few quick questions to narrow down your options, Jifter will look through its database of (currently) 500 products--books, movies, and various gifts--and find the top gifts for you.
 
 ## Features
 Jifter is a Gift Suggestion Alexa skill. After asking you 8 yes/no/maybe questions and a price range, the app narrows down some potential gift ideas.
